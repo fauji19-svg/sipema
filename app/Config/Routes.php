@@ -2,52 +2,64 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/** @var RouteCollection $routes */
-$routes->get('/', 'Home::index');
+/**
+ * @var RouteCollection $routes
+ */
 
-// =====================
-// ROUTE AUTH (LOGIN)
-// =====================
-$routes->get('/login', 'AuthController::index');
+// AUTH (tidak perlu filter)
+$routes->get('/login',  'AuthController::index');
 $routes->post('/login', 'AuthController::loginProcess');
 $routes->get('/logout', 'AuthController::logout');
 
 // =====================
-// ROUTE ADMIN
-// =====================
-$routes->get('/admin/dashboard',                'Admin\AdminController::index');
-$routes->get('/admin/permohonan-masuk',         'Admin\AdminController::permohonanMasuk');
-$routes->get('/admin/permohonan-selesai',       'Admin\AdminController::permohonanSelesai');
-$routes->get('/admin/detail/(:segment)',        'Admin\AdminController::detail/$1');
-$routes->post('/admin/ubah-status/(:num)',      'Admin\AdminController::ubahStatus/$1');
-$routes->post('/admin/validasi-dokumen/(:num)', 'Admin\AdminController::validasiDokumen/$1');
-$routes->post('/admin/hitung-pajak/(:num)',     'Admin\AdminController::hitungPajak/$1');
-$routes->get('/admin/audit-trail',  'Admin\AdminController::auditTrail');
-$routes->get('/admin/users',        'Admin\AdminController::users');
-$routes->get('/admin/profil',       'Admin\AdminController::profil');
-$routes->post('/admin/profil',      'Admin\AdminController::updateProfil');
-
-// =====================
-// ROUTE DASHBOARD STAFF
-// =====================
-$routes->get('/staff/dashboard', 'Staff\DashboardController::index');
-
-// =====================
-// ROUTE DASHBOARD NOTARIS
-// =====================
-$routes->get('/notaris/dashboard', 'Notaris\DashboardController::index');
-
-// =====================
 // ROUTE PEMOHON
 // =====================
-$routes->get('/pemohon/dashboard',          'Pemohon\PermohonanController::index');
-$routes->get('/pemohon/generate-kode',      'Pemohon\PermohonanController::generateKode');
-$routes->post('/pemohon/store',             'Pemohon\PermohonanController::store');
-$routes->get('/pemohon/tracking',           'Pemohon\PermohonanController::tracking');
-$routes->get('/pemohon/tracking/(:segment)','Pemohon\PermohonanController::tracking/$1');
-$routes->get('/pemohon/riwayat',            'Pemohon\PermohonanController::riwayat');
-$routes->get('/pemohon/detail/(:segment)', 'Pemohon\PermohonanController::detail/$1');
-$routes->get('/pemohon/notifikasi', 'Pemohon\PermohonanController::notifikasi');
-$routes->get('/pemohon/profil',     'Pemohon\PermohonanController::profil');
-$routes->post('/pemohon/profil',    'Pemohon\PermohonanController::updateProfil');
-$routes->get('/pemohon/panduan',    'Pemohon\PermohonanController::panduan');
+$routes->group('pemohon', ['filter' => 'auth:pemohon'], function($routes) {
+    $routes->get('dashboard',              'Pemohon\PermohonanController::index');
+    $routes->get('generate-kode',         'Pemohon\PermohonanController::generateKode');
+    $routes->post('store',                'Pemohon\PermohonanController::store');
+    $routes->get('tracking',              'Pemohon\PermohonanController::tracking');
+    $routes->get('tracking/(:segment)',   'Pemohon\PermohonanController::tracking/$1');
+    $routes->get('riwayat',              'Pemohon\PermohonanController::riwayat');
+    $routes->get('detail/(:segment)',    'Pemohon\PermohonanController::detail/$1');
+    $routes->get('notifikasi',           'Pemohon\PermohonanController::notifikasi');
+    $routes->get('profil',               'Pemohon\PermohonanController::profil');
+    $routes->post('profil',              'Pemohon\PermohonanController::updateProfil');
+    $routes->get('panduan',              'Pemohon\PermohonanController::panduan');
+});
+
+// =====================
+// ROUTE ADMIN
+// =====================
+$routes->group('admin', ['filter' => 'auth:admin'], function($routes) {
+    $routes->get('dashboard',                    'Admin\AdminController::index');
+    $routes->get('permohonan-masuk',             'Admin\AdminController::permohonanMasuk');
+    $routes->get('permohonan-selesai',           'Admin\AdminController::permohonanSelesai');
+    $routes->get('detail/(:segment)',            'Admin\AdminController::detail/$1');
+    $routes->post('ubah-status/(:num)',          'Admin\AdminController::ubahStatus/$1');
+    $routes->post('validasi-dokumen/(:num)',     'Admin\AdminController::validasiDokumen/$1');
+    $routes->post('hitung-pajak/(:num)',         'Admin\AdminController::hitungPajak/$1');
+    $routes->get('audit-trail',                  'Admin\AdminController::auditTrail');
+    $routes->get('users',                        'Admin\AdminController::users');
+    $routes->get('profil',                       'Admin\AdminController::profil');
+    $routes->post('profil',                      'Admin\AdminController::updateProfil');
+});
+
+// =====================
+// ROUTE STAFF
+// =====================
+$routes->group('staff', ['filter' => 'auth:staff'], function($routes) {
+    $routes->get('dashboard',            'Staff\StaffController::index');
+    $routes->get('detail/(:segment)',    'Staff\StaffController::detail/$1');
+    $routes->post('submit-draft/(:num)', 'Staff\StaffController::submitDraft/$1');
+});
+
+// =====================
+// ROUTE NOTARIS
+// =====================
+$routes->group('notaris', ['filter' => 'auth:notaris'], function($routes) {
+    $routes->get('dashboard',           'Notaris\NotarisController::index');
+    $routes->get('detail/(:segment)',   'Notaris\NotarisController::detail/$1');
+    $routes->post('setujui/(:num)',     'Notaris\NotarisController::setujui/$1');
+    $routes->post('tolak/(:num)',       'Notaris\NotarisController::tolak/$1');
+});
