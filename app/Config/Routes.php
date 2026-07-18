@@ -13,9 +13,19 @@ $routes->post('/login', 'AuthController::loginProcess');
 $routes->get('/logout', 'AuthController::logout');
 
 // =====================
-// ROUTE DASHBOARD ADMIN
+// ROUTE ADMIN
 // =====================
-$routes->get('/admin/dashboard', 'Admin\DashboardController::index');
+$routes->get('/admin/dashboard',                'Admin\AdminController::index');
+$routes->get('/admin/permohonan-masuk',         'Admin\AdminController::permohonanMasuk');
+$routes->get('/admin/permohonan-selesai',       'Admin\AdminController::permohonanSelesai');
+$routes->get('/admin/detail/(:segment)',        'Admin\AdminController::detail/$1');
+$routes->post('/admin/ubah-status/(:num)',      'Admin\AdminController::ubahStatus/$1');
+$routes->post('/admin/validasi-dokumen/(:num)', 'Admin\AdminController::validasiDokumen/$1');
+$routes->post('/admin/hitung-pajak/(:num)',     'Admin\AdminController::hitungPajak/$1');
+$routes->get('/admin/audit-trail',  'Admin\AdminController::auditTrail');
+$routes->get('/admin/users',        'Admin\AdminController::users');
+$routes->get('/admin/profil',       'Admin\AdminController::profil');
+$routes->post('/admin/profil',      'Admin\AdminController::updateProfil');
 
 // =====================
 // ROUTE DASHBOARD STAFF

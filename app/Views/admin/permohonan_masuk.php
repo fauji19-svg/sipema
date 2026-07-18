@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard Admin — SIPEMA</title>
+<title>Permohonan Masuk — SIPEMA</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
 <style>
@@ -24,36 +24,27 @@ body{background:var(--cream);font-family:'Segoe UI',sans-serif;}
 .nbadge{margin-left:auto;background:#e74c3c;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;}
 .nbadge-g{margin-left:auto;background:var(--success);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;}
 .mc{margin-left:220px;padding:24px;}
-.topbar{background:#fff;border-bottom:1px solid #e5e0d8;padding:12px 24px;margin-left:220px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;}
+.topbar{background:#fff;border-bottom:1px solid #e5e0d8;padding:12px 24px;margin-left:220px;position:sticky;top:0;z-index:50;}
 .topbar-title{font-size:15px;font-weight:700;color:var(--navy);}
-.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
-.sc{background:#fff;border:1px solid #e5e0d8;border-top:3px solid var(--navy);border-radius:4px;padding:16px;}
-.sc.gold{border-top-color:var(--gold);}
-.sc.green{border-top-color:var(--success);}
-.sc.red{border-top-color:var(--danger);}
-.sc.orange{border-top-color:var(--warning);}
-.sn{font-size:28px;font-weight:800;color:var(--navy);line-height:1;}
-.sl{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;}
 .section-card{background:#fff;border:1px solid #e5e0d8;border-radius:4px;overflow:visible;margin-bottom:16px;}
 .sh{background:var(--navy);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-radius:4px 4px 0 0;}
 .sh h6{margin:0;font-size:13px;font-weight:700;}
+.filter-bar{background:#fff;border:1px solid #e5e0d8;border-radius:4px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;}
+.fl{font-size:11.5px;font-weight:600;color:#333;margin-bottom:3px;display:block;}
+.fi{border:1px solid #ccc;border-radius:2px;padding:6px 10px;font-size:13px;min-width:150px;}
+.fi:focus{outline:none;border-color:var(--navy);}
 table.t{width:100%;border-collapse:collapse;font-size:12.5px;}
 table.t thead th{background:#3D5080;color:#fff;padding:9px 12px;text-align:left;font-size:11.5px;font-weight:700;}
 table.t tbody td{padding:10px 12px;border-bottom:1px solid #eee;vertical-align:middle;}
 table.t tbody tr:hover{background:#f5f8ff;}
-table.t tbody tr.selesai-row{background:#f0fdf4;}
-table.t tbody tr.selesai-row:hover{background:#dcfce7;}
 .kode{font-family:monospace;font-weight:800;font-size:12px;color:var(--navy);background:#EEF3FF;padding:3px 8px;border:1px solid #c7d7f5;border-radius:2px;letter-spacing:1.5px;}
 .bp{background:#dbeafe;color:#1d4ed8;padding:3px 9px;border-radius:2px;font-size:11px;font-weight:700;}
 .bv{background:#fef3c7;color:#92400e;padding:3px 9px;border-radius:2px;font-size:11px;font-weight:700;}
 .br{background:#fee2e2;color:#991b1b;padding:3px 9px;border-radius:2px;font-size:11px;font-weight:700;}
-.bs{background:#d1fae5;color:#065f46;padding:3px 9px;border-radius:2px;font-size:11px;font-weight:700;}
 .bpj{background:#ede9fe;color:#5b21b6;padding:3px 9px;border-radius:2px;font-size:11px;font-weight:700;}
 .bd{background:#dcfce7;color:#166534;padding:3px 9px;border-radius:2px;font-size:11px;font-weight:700;}
 .btn-nv{background:var(--navy);color:#fff;border:none;padding:7px 14px;font-size:12px;font-weight:600;border-radius:3px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;text-decoration:none;}
-.btn-gd{background:var(--gold);color:var(--navy);border:none;padding:7px 14px;font-size:12px;font-weight:700;border-radius:3px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;text-decoration:none;}
-.btn-ok{background:var(--success);color:#fff;border:none;padding:7px 14px;font-size:12px;font-weight:600;border-radius:3px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;text-decoration:none;}
-.btn-sm{padding:4px 10px;font-size:11px;}
+.btn-ol{background:#fff;color:var(--navy);border:1px solid #ccc;padding:7px 14px;font-size:12px;font-weight:600;border-radius:3px;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
 .aw{position:relative;display:inline-block;}
 .bdots{background:#fff;border:1px solid #ccc;border-radius:2px;width:30px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:#666;font-weight:700;}
 .bdots:hover{border-color:var(--navy);color:var(--navy);}
@@ -63,11 +54,9 @@ table.t tbody tr.selesai-row:hover{background:#dcfce7;}
 .ddbox a:last-child{border-bottom:none;}
 .ddbox a:hover{background:#f0f4ff;color:var(--navy);}
 .ddbox a i{color:#666;font-size:14px;width:16px;}
-.legend{padding:8px 16px;font-size:11.5px;color:#666;border-top:1px solid #eee;display:flex;gap:16px;}
 </style>
 </head>
 <body>
-
 <aside class="sidebar">
   <div class="sb"><div class="brand">🏛️ SIPEMA</div><div class="sub">Kantor PPAT Eliana, S.H., M.Kn</div></div>
   <div class="su">
@@ -76,9 +65,9 @@ table.t tbody tr.selesai-row:hover{background:#dcfce7;}
   </div>
   <nav>
     <div class="nl">Menu Utama</div>
-    <a href="/admin/dashboard" class="ni active"><i class="bi bi-house-door"></i> Beranda</a>
-    <a href="/admin/permohonan-masuk" class="ni"><i class="bi bi-file-earmark-arrow-down"></i> Permohonan Masuk <span class="nbadge"><?= $totalMasuk ?></span></a>
-    <a href="/admin/permohonan-selesai" class="ni"><i class="bi bi-file-earmark-check"></i> Permohonan Selesai <span class="nbadge-g"><?= $totalSelesai ?></span></a>
+    <a href="/admin/dashboard" class="ni"><i class="bi bi-house-door"></i> Beranda</a>
+    <a href="/admin/permohonan-masuk" class="ni active"><i class="bi bi-file-earmark-arrow-down"></i> Permohonan Masuk <span class="nbadge"><?= count($permohonan) ?></span></a>
+    <a href="/admin/permohonan-selesai" class="ni"><i class="bi bi-file-earmark-check"></i> Permohonan Selesai</a>
     <a href="/admin/audit-trail" class="ni"><i class="bi bi-clock-history"></i> Audit Trail</a>
     <div class="nl">Pengaturan</div>
     <a href="/admin/users" class="ni"><i class="bi bi-people"></i> Manajemen User</a>
@@ -87,68 +76,77 @@ table.t tbody tr.selesai-row:hover{background:#dcfce7;}
   </nav>
 </aside>
 
-<div class="topbar">
-  <div class="topbar-title">Beranda</div>
-  <span style="font-size:12px;color:#666;"><?= date('l, d F Y') ?></span>
-</div>
+<div class="topbar"><div class="topbar-title">Permohonan Masuk</div></div>
 
 <div class="mc">
-  <?php if(session()->getFlashdata('success')): ?>
-  <div style="background:#d1fae5;border-left:4px solid var(--success);color:#065f46;padding:10px 16px;border-radius:3px;margin-bottom:14px;font-size:13px;display:flex;align-items:center;gap:8px;">
-    <i class="bi bi-check-circle-fill"></i> <?= session()->getFlashdata('success') ?>
-  </div>
-  <?php endif; ?>
-
-  <div class="stat-grid">
-    <div class="sc"><div class="sn"><?= $totalSemua ?></div><div class="sl">Total Permohonan</div></div>
-    <div class="sc gold"><div class="sn"><?= $totalPengajuan?></div><div class="sl">Pengajuan Baru</div></div>
-    <div class="sc orange"><div class="sn"><?= $totalProses ?></div><div class="sl">Sedang Diproses</div></div>
-    <div class="sc red"><div class="sn"><?= $totalRevisi ?></div><div class="sl">Perlu Revisi</div></div>
-    <div class="sc green"><div class="sn"><?= $totalSelesai ?></div><div class="sl">Selesai</div></div>
-  </div>
+  <!-- FILTER -->
+  <form method="GET" action="/admin/permohonan-masuk">
+    <div class="filter-bar">
+      <div>
+        <label class="fl">Status :</label>
+        <select name="status" class="fi">
+          <option value="">-- Semua --</option>
+          <?php foreach(['Pengajuan','Validasi Dokumen','Revisi','Perhitungan Pajak','Draft Akta','Review Notaris'] as $s): ?>
+          <option value="<?= $s ?>" <?= $filter_status==$s?'selected':'' ?>><?= $s ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div>
+        <label class="fl">Jenis Akta :</label>
+        <select name="jenis_akta_id" class="fi">
+          <option value="">-- Semua --</option>
+          <?php foreach($jenisAkta as $ja): ?>
+          <option value="<?= $ja['id'] ?>" <?= $filter_jenis==$ja['id']?'selected':'' ?>><?= esc($ja['nama_akta']) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div>
+        <label class="fl">Kode Unik :</label>
+        <input type="text" name="kode" class="fi" placeholder="Cari kode..." value="<?= esc($filter_kode) ?>" style="font-family:monospace;font-weight:700;letter-spacing:1px;text-transform:uppercase;">
+      </div>
+      <button type="submit" class="btn-nv"><i class="bi bi-search"></i> Cari</button>
+      <a href="/admin/permohonan-masuk" class="btn-ol"><i class="bi bi-x"></i> Reset</a>
+    </div>
+  </form>
 
   <div class="section-card">
     <div class="sh">
-      <h6><i class="bi bi-list-ul" style="color:var(--gold);margin-right:6px;"></i>Semua Permohonan (<?= $totalSemua ?>)</h6>
-      <div style="display:flex;gap:8px;">
-        <a href="/admin/permohonan-masuk" class="btn-gd btn-sm"><i class="bi bi-file-earmark-arrow-down"></i> Masuk</a>
-        <a href="/admin/permohonan-selesai" class="btn-ok btn-sm"><i class="bi bi-file-earmark-check"></i> Selesai</a>
-      </div>
+      <h6><i class="bi bi-file-earmark-arrow-down" style="color:var(--gold);margin-right:6px;"></i>Daftar Permohonan Masuk & Diproses</h6>
+      <span style="font-size:11px;color:rgba(255,255,255,0.6);"><?= count($permohonan) ?> permohonan</span>
     </div>
     <table class="t">
       <thead>
-        <tr><th>No</th><th>Kode Unik</th><th>Nama Pemohon</th><th>Jenis Akta</th><th>Tgl Masuk</th><th>Status</th><th style="text-align:center;">Aksi</th></tr>
+        <tr><th>No</th><th>Kode Unik</th><th>Nama Pemohon</th><th>No. HP</th><th>Jenis Akta</th><th>Tgl Masuk</th><th>Nilai Transaksi</th><th>Status</th><th style="text-align:center;">Aksi</th></tr>
       </thead>
       <tbody>
-        <?php if(empty($semua)): ?>
-        <tr><td colspan="7" style="text-align:center;padding:28px;color:#999;">Belum ada permohonan.</td></tr>
+        <?php if(empty($permohonan)): ?>
+        <tr><td colspan="9" style="text-align:center;padding:28px;color:#999;"><i class="bi bi-inbox" style="font-size:28px;display:block;margin-bottom:8px;"></i>Tidak ada permohonan masuk.</td></tr>
         <?php else: ?>
-        <?php foreach($semua as $i => $p):
-          $isSelesai = $p['status'] === 'Selesai';
+        <?php foreach($permohonan as $i => $p):
           $badgeClass = match($p['status']) {
             'Pengajuan'        => 'bp',
             'Validasi Dokumen' => 'bv',
             'Revisi'           => 'br',
-            'Selesai'          => 'bs',
             'Perhitungan Pajak'=> 'bpj',
             default            => 'bd',
           };
         ?>
-        <tr class="<?= $isSelesai ? 'selesai-row' : '' ?>">
+        <tr>
           <td style="text-align:center;"><?= $i+1 ?></td>
           <td><span class="kode"><?= esc($p['kode_unik']) ?></span></td>
           <td><?= esc($p['nama_pemohon']) ?></td>
+          <td><?= esc($p['no_hp']) ?></td>
           <td><?= esc($p['nama_akta']) ?></td>
           <td><?= date('d/m/Y', strtotime($p['tanggal_pengajuan'])) ?></td>
+          <td><?= $p['nilai_transaksi'] ? 'Rp '.number_format($p['nilai_transaksi'],0,',','.') : '-' ?></td>
           <td><span class="<?= $badgeClass ?>">● <?= esc($p['status']) ?></span></td>
           <td style="text-align:center;">
             <div class="aw">
               <button class="bdots" onclick="td(this)">···</button>
               <div class="ddbox">
                 <a href="/admin/detail/<?= esc($p['kode_unik']) ?>"><i class="bi bi-eye"></i> Lihat Detail</a>
-                <?php if(!$isSelesai): ?>
                 <a href="/admin/detail/<?= esc($p['kode_unik']) ?>#ubah-status"><i class="bi bi-arrow-repeat"></i> Ubah Status</a>
-                <?php endif; ?>
+                <a href="/admin/detail/<?= esc($p['kode_unik']) ?>#hitung-pajak"><i class="bi bi-calculator"></i> Hitung Pajak</a>
               </div>
             </div>
           </td>
@@ -157,11 +155,6 @@ table.t tbody tr.selesai-row:hover{background:#dcfce7;}
         <?php endif; ?>
       </tbody>
     </table>
-    <div class="legend">
-      <span>Total: <?= $totalSemua ?> permohonan</span>
-      <span style="color:var(--warning);">■ Masuk/Proses: <?= $totalMasuk ?></span>
-      <span style="color:var(--success);">■ Selesai: <?= $totalSelesai ?></span>
-    </div>
   </div>
 </div>
 
