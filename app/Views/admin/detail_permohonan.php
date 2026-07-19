@@ -172,10 +172,6 @@ table.t tbody tr:hover{background:#f5f8ff;}
             <div class="prow"><span>Total Pajak</span><span>Rp <?= number_format($pembayaran['bphtb']+$pembayaran['pph'],0,',','.') ?></span></div>
           </div>
           <div style="margin-top:10px;font-size:12px;">
-            Status Bayar:
-            <strong style="color:<?= $pembayaran['status_bayar']==='Lunas'?'var(--success)':'var(--danger)' ?>;">
-              <?= esc($pembayaran['status_bayar']) ?>
-            </strong>
           </div>
         </div>
       </div>

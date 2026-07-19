@@ -247,7 +247,7 @@ table.main-table tbody tr:hover { background:#f5f8ff; }
       <button class="modal-close" onclick="closeModal1()">×</button>
     </div>
     <div class="modal-body">
-      <p style="font-size:13px; margin:0;">Apakah Anda akan melakukan pengajuan permohonan akta baru ke <strong>Kantor PPAT Eliana, S.H., M.Kn</strong>?</p>
+    <p style="font-size:13px; margin:0;">Apakah Anda akan melakukan pengajuan permohonan <strong id="modal1-jenis-text">akta baru</strong> ke <strong>Kantor PPAT Eliana, S.H., M.Kn</strong>?</p>
     </div>
     <div class="modal-footer">
       <button class="btn-success" onclick="lanjutkan()"><i class="bi bi-check2"></i> Lanjutkan</button>
@@ -331,21 +331,27 @@ table.main-table tbody tr:hover { background:#f5f8ff; }
         <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
           <?php
           $dokumen_list = [
-            'ktp'              => 'KTP',
-            'kk'               => 'Kartu Keluarga (KK)',
-            'npwp'             => 'NPWP',
-            'buku_nikah'       => 'Buku Nikah',
-            'akta_lahir'       => 'Akta Lahir',
-            'ajb'              => 'AJB',
-            'sppt_pbb'         => 'SPPT/PBB',
-            'bukti_bayar_sppt' => 'Bukti Bayar SPPT/PBB',
-            'dasar_pengalihan' => 'Akta/Dokumen Dasar Pengalihan Hak',
-            'akta_kematian'    => 'Akta Kematian',
-            'bukti_transaksi'  => 'Bukti Transaksi',
-            'bukti_kepemilikan'=> 'Bukti Kepemilikan',
-            'surat_kuasa_waris'=> 'Surat Kuasa Waris',
-            'foto_lokasi'      => 'Foto Lokasi',
-            'dokumen_lainnya'  => 'Dokumen Pendukung Lainnya',
+            'ktp_penjual'            => 'Ktp Penjual',
+            'ktp_istri_penjual'      => 'Ktp istri Penjual',
+            'kk_penjual'             => 'Kartu Keluarga Penjual (KK)',
+            'npwp_penjual'           => 'Npwp Penjual',
+            'ktp_pembeli'            => 'Ktp Pembeli',
+            'kk_pembeli'             => 'Kartu Keluarga Pembeli (KK)',
+            'npwp_pembeli'           => 'Npwp Pembeli',
+            'buku_nikah_penjual'     => 'Buku Nikah Penjual',
+            'akta_lahir'             => 'Akta Lahir',
+            'sppt_pbb'               => 'SPPT/PBB',
+            'bukti_bayar_sppt'       => 'Bukti Bayar SPPT/PBB',
+            'akta_kematian'          => 'Akta Kematian',
+            'bukti_transaksi'        => 'Bukti Transaksi',
+            'bukti_kepemilikan'      => 'Sertipikat/AJB/C Desa Girik',
+            'surat_kuasa_waris'      => 'Surat Kuasa Waris',
+            'foto_lokasi'            => 'Foto Lokasi Tanah',
+            'dokumen_lainnya_1'      => 'Dokumen Pendukung Lainnya',
+            'dokumen_lainnya_2'      => 'Dokumen Pendukung Lainnya',
+            'dokumen_lainnya_3'      => 'Dokumen Pendukung Lainnya',
+            'dokumen_lainnya_4'      => 'Dokumen Pendukung Lainnya',
+            'dokumen_lainnya_5'      => 'Dokumen Pendukung Lainnya',
           ];
           foreach ($dokumen_list as $field => $label): ?>
           <tr style="border-bottom:1px solid #eee;">
@@ -387,6 +393,7 @@ function pilihJenis(id, nama, el) {
 }
 
 function openModal1() {
+  document.getElementById('modal1-jenis-text').textContent = selectedJenisNama || 'akta baru';
   document.getElementById('modal1').classList.add('open');
 }
 function closeModal1() {

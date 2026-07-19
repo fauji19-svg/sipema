@@ -13,12 +13,14 @@ class PermohonanModel extends Model
     protected $allowedFields = [
         'kode_unik',
         'pemohon_id',
+        'nik',
+        'alamat',
+        'alamat_objek',
         'jenis_akta_id',
         'status',
         'nilai_transaksi',
         'tanggal_pengajuan',
     ];
-
     // Generate kode unik acak 7 karakter
     public function generateKodeUnik()
     {

@@ -76,11 +76,17 @@ class PermohonanController extends BaseController
         }
         $jenis_akta_id = $this->request->getPost('jenis_akta_id');
         $nilai         = $this->request->getPost('nilai_transaksi');
+        $nik           = $this->request->getPost('nik');
+        $alamat        = $this->request->getPost('alamat');
+        $alamat_objek  = $this->request->getPost('alamat_objek');
 
         // Simpan ke tabel permohonan
         $this->permohonanModel->insert([
             'kode_unik'         => $kode,
             'pemohon_id'        => $pemohon_id,
+            'nik'               => $nik,
+            'alamat'            => $alamat,
+            'alamat_objek'      => $alamat_objek,
             'jenis_akta_id'     => $jenis_akta_id,
             'status'            => 'Pengajuan',
             'nilai_transaksi'   => str_replace(['.', ','], ['', '.'], $nilai),
@@ -91,10 +97,14 @@ class PermohonanController extends BaseController
 
         // Handle upload dokumen
         $tipe_dokumen = [
-            'ktp', 'kk', 'npwp', 'buku_nikah', 'akta_lahir',
-            'ajb', 'sppt_pbb', 'bukti_bayar_sppt', 'dasar_pengalihan',
-            'akta_kematian', 'bukti_transaksi', 'bukti_kepemilikan',
-            'surat_kuasa_waris', 'foto_lokasi', 'dokumen_lainnya'
+            'ktp_penjual', 'ktp_istri_penjual', 'kk_penjual', 'npwp_penjual',
+            'ktp_pembeli', 'kk_pembeli', 'npwp_pembeli',
+            'buku_nikah_penjual', 'akta_lahir',
+            'sppt_pbb', 'bukti_bayar_sppt', 'akta_kematian',
+            'bukti_transaksi', 'bukti_kepemilikan',
+            'surat_kuasa_waris', 'foto_lokasi',
+            'dokumen_lainnya_1', 'dokumen_lainnya_2', 'dokumen_lainnya_3',
+            'dokumen_lainnya_4', 'dokumen_lainnya_5'
         ];
 
         foreach ($tipe_dokumen as $tipe) {
@@ -179,10 +189,15 @@ public function detail($kode)
     }
 
     $dokumen = $this->dokumenModel->getByPermohonan($permohonan['id']);
+     // Ambil hasil hitungan pajak dari Admin (jika sudah dihitung)
+    $pembayaran = db_connect()->table('pembayaran')
+                              ->where('permohonan_id', $permohonan['id'])
+                              ->get()->getRowArray();
 
     return view('pemohon/detail', [
         'permohonan' => $permohonan,
         'dokumen'    => $dokumen,
+        'pembayaran' => $pembayaran,
     ]);
 }
 // =====================

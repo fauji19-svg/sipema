@@ -152,6 +152,34 @@ table.doc-table tbody tr:hover{background:#f5f8ff;}
           </a>
         </div>
       </div>
+
+      <!-- RINCIAN PAJAK -->
+      <div class="section-card">
+        <div class="section-header">
+          <h6>Rincian Pajak</h6>
+        </div>
+        <div style="padding:14px 16px; font-size:12.5px;">
+          <?php if (!empty($pembayaran)): ?>
+            <?php $total = (float)$pembayaran['bphtb'] + (float)$pembayaran['pph']; ?>
+            <table style="width:100%;">
+              <tr>
+                <td style="padding:5px 0; color:#666;">BPHTB (5%)</td>
+                <td style="text-align:right; font-weight:600;">Rp <?= number_format($pembayaran['bphtb'], 0, ',', '.') ?></td>
+              </tr>
+              <tr>
+                <td style="padding:5px 0; color:#666;">PPH (2,5%)</td>
+                <td style="text-align:right; font-weight:600;">Rp <?= number_format($pembayaran['pph'], 0, ',', '.') ?></td>
+              </tr>
+              <tr style="border-top:1px solid #ddd;">
+                <td style="padding:7px 0; font-weight:700;">Total Pajak</td>
+                <td style="text-align:right; font-weight:700; color:var(--navy);">Rp <?= number_format($total, 0, ',', '.') ?></td>
+              </tr>
+            </table>
+          <?php else: ?>
+            <span style="color:#888;"><i class="bi bi-hourglass-split"></i> Pajak belum dihitung oleh petugas.</span>
+          <?php endif; ?>
+        </div>
+      </div>
     </div>
 
     <!-- DOKUMEN -->
@@ -182,21 +210,27 @@ table.doc-table tbody tr:hover{background:#f5f8ff;}
           <tbody>
             <?php
             $namaDoc = [
-              'ktp'               => 'KTP',
-              'kk'                => 'Kartu Keluarga (KK)',
-              'npwp'              => 'NPWP',
-              'buku_nikah'        => 'Buku Nikah',
-              'akta_lahir'        => 'Akta Lahir',
-              'ajb'               => 'AJB',
-              'sppt_pbb'          => 'SPPT/PBB',
-              'bukti_bayar_sppt'  => 'Bukti Bayar SPPT/PBB',
-              'dasar_pengalihan'  => 'Dasar Pengalihan Hak',
-              'akta_kematian'     => 'Akta Kematian',
-              'bukti_transaksi'   => 'Bukti Transaksi',
-              'bukti_kepemilikan' => 'Bukti Kepemilikan',
-              'surat_kuasa_waris' => 'Surat Kuasa Waris',
-              'foto_lokasi'       => 'Foto Lokasi',
-              'dokumen_lainnya'   => 'Dokumen Pendukung Lainnya',
+              'ktp_penjual'        => 'Ktp Penjual',
+              'ktp_istri_penjual'  => 'Ktp Istri Penjual',
+              'kk_penjual'         => 'Kartu Keluarga Penjual (KK)',
+              'npwp_penjual'       => 'Npwp Penjual',
+              'ktp_pembeli'        => 'Ktp Pembeli',
+              'kk_pembeli'         => 'Kartu Keluarga Pembeli (KK)',
+              'npwp_pembeli'       => 'Npwp Pembeli',
+              'buku_nikah_penjual' => 'Buku Nikah Penjual',
+              'akta_lahir'         => 'Akta Lahir',
+              'sppt_pbb'           => 'SPPT/PBB',
+              'bukti_bayar_sppt'   => 'Bukti Bayar SPPT/PBB',
+              'akta_kematian'      => 'Akta Kematian',
+              'bukti_transaksi'    => 'Bukti Transaksi',
+              'bukti_kepemilikan'  => 'Sertipikat/AJB/C Desa Girik',
+              'surat_kuasa_waris'  => 'Surat Kuasa Waris',
+              'foto_lokasi'        => 'Foto Lokasi Tanah',
+              'dokumen_lainnya_1'  => 'Dokumen Pendukung Lainnya',
+              'dokumen_lainnya_2'  => 'Dokumen Pendukung Lainnya',
+              'dokumen_lainnya_3'  => 'Dokumen Pendukung Lainnya',
+              'dokumen_lainnya_4'  => 'Dokumen Pendukung Lainnya',
+              'dokumen_lainnya_5'  => 'Dokumen Pendukung Lainnya',
             ];
             foreach ($dokumen as $i => $dok):
               $statusClass = match($dok['status_validasi']) {

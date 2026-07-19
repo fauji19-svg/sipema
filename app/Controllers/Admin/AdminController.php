@@ -236,7 +236,8 @@ class AdminController extends BaseController
         return redirect()->to('/admin/detail/' . $kode)
                          ->with('success', 'Pajak dihitung — BPHTB: Rp ' . number_format($bphtb, 0, ',', '.') . ' | PPH: Rp ' . number_format($pph, 0, ',', '.'));
     }
-    // =====================
+    
+// =====================
 // AUDIT TRAIL
 // =====================
 public function auditTrail()
