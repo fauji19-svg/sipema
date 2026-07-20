@@ -46,6 +46,11 @@ class NotarisController extends BaseController
         }
 
         $dokumen    = $this->dokumenModel->getByPermohonan($permohonan['id']);
+        // Draft akta terbaru dari Staff
+        $draft = $this->db->table('draft_akta')
+                          ->where('permohonan_id', $permohonan['id'])
+                          ->orderBy('id', 'DESC')
+                          ->get()->getRowArray();
         $auditTrail = $this->db->table('audit_trail')
                                ->where('permohonan_id', $permohonan['id'])
                                ->orderBy('waktu','DESC')
@@ -59,6 +64,7 @@ class NotarisController extends BaseController
             'dokumen'    => $dokumen,
             'auditTrail' => $auditTrail,
             'pembayaran' => $pembayaran,
+            'draft'      => $draft,
         ]);
     }
 

@@ -121,14 +121,16 @@ table.t tbody td{padding:10px 12px;border-bottom:1px solid #eee;vertical-align:m
       <?php endif; ?>
 
       <!-- SUBMIT DRAFT -->
-      <?php if($permohonan['status'] === 'Perhitungan Pajak'): ?>
+      <?php if(in_array($permohonan['status'], ['Perhitungan Pajak', 'Draft Akta'])): ?>
       <div class="sc" id="submit-draft">
         <div class="sh"><h6>Submit Draft Akta ke Notaris</h6></div>
-        <form method="POST" action="/staff/submit-draft/<?= $permohonan['id'] ?>" style="padding:16px;">
+      <form method="POST" action="/staff/submit-draft/<?= $permohonan['id'] ?>" enctype="multipart/form-data" style="padding:16px;">
           <?= csrf_field() ?>
           <input type="hidden" name="kode_unik" value="<?= esc($permohonan['kode_unik']) ?>">
           <div style="margin-bottom:12px;">
             <label class="flabel">Catatan untuk Notaris (opsional)</label>
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">File Draft Akta (PDF) *</label>
+            <input type="file" name="file_draft" class="finput" accept=".pdf" required style="margin-bottom:10px;">
             <textarea name="catatan" class="finput" rows="3" placeholder="Catatan tambahan..."></textarea>
           </div>
           <button type="submit" class="btn-ok" onclick="return confirm('Kirim draft akta ke Notaris?')">

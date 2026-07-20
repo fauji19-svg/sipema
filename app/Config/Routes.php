@@ -43,6 +43,8 @@ $routes->group('admin', ['filter' => 'auth:admin'], function($routes) {
     $routes->get('users',                        'Admin\AdminController::users');
     $routes->get('profil',                       'Admin\AdminController::profil');
     $routes->post('profil',                      'Admin\AdminController::updateProfil');
+    $routes->get('lihat-dokumen/(:num)', '\App\Controllers\FileController::lihatDokumen/$1');
+    $routes->get('lihat-draft/(:num)',   '\App\Controllers\FileController::lihatDraft/$1');
 });
 
 // =====================
@@ -52,6 +54,8 @@ $routes->group('staff', ['filter' => 'auth:staff'], function($routes) {
     $routes->get('dashboard',            'Staff\StaffController::index');
     $routes->get('detail/(:segment)',    'Staff\StaffController::detail/$1');
     $routes->post('submit-draft/(:num)', 'Staff\StaffController::submitDraft/$1');
+    $routes->get('lihat-dokumen/(:num)', '\App\Controllers\FileController::lihatDokumen/$1');
+    $routes->get('lihat-draft/(:num)',   '\App\Controllers\FileController::lihatDraft/$1');
 });
 
 // =====================
@@ -62,4 +66,6 @@ $routes->group('notaris', ['filter' => 'auth:notaris'], function($routes) {
     $routes->get('detail/(:segment)',   'Notaris\NotarisController::detail/$1');
     $routes->post('setujui/(:num)',     'Notaris\NotarisController::setujui/$1');
     $routes->post('tolak/(:num)',       'Notaris\NotarisController::tolak/$1');
+    $routes->get('lihat-dokumen/(:num)', '\App\Controllers\FileController::lihatDokumen/$1');
+    $routes->get('lihat-draft/(:num)',   '\App\Controllers\FileController::lihatDraft/$1');
 });

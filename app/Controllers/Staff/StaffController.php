@@ -73,10 +73,28 @@ class StaffController extends BaseController
         ]);
     }
 
-    public function submitDraft($id)
+public function submitDraft($id)
     {
         $kode    = $this->request->getPost('kode_unik');
         $catatan = $this->request->getPost('catatan');
+
+        // Upload file draft akta
+        $file = $this->request->getFile('file_draft');
+        if (!$file || !$file->isValid()) {
+            return redirect()->back()->with('error', 'File draft akta wajib diupload.');
+        }
+        $namaFile = $file->getRandomName();
+        $file->move(WRITEPATH . 'uploads/draft/', $namaFile);
+
+        // Simpan ke tabel draft_akta
+        $this->db->table('draft_akta')->insert([
+            'permohonan_id' => $id,
+            'staff_id'      => session()->get('user_id'),
+            'nama_file'     => $namaFile,
+            'catatan'       => $catatan,
+            'status_review' => 'Menunggu Notaris',
+            'created_at'    => date('Y-m-d H:i:s'),
+        ]);
 
         // Update status ke Review Notaris
         $this->permohonanModel->update($id, ['status' => 'Review Notaris']);

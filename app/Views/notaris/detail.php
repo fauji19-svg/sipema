@@ -154,8 +154,29 @@ table.t tbody td{padding:10px 12px;border-bottom:1px solid #eee;vertical-align:m
     </div>
 
     <div class="col-md-8">
+<!-- DRAFT AKTA DARI STAFF -->
       <div class="sc">
-        <div class="sh"><h6>Dokumen Pemohon</h6><span style="font-size:11px;color:rgba(255,255,255,0.6);"><?= count($dokumen) ?> file</span></div>
+        <div class="sh"><h6>Draft Akta dari Staff</h6></div>
+        <div style="padding:14px 16px;font-size:12.5px;">
+          <?php if (!empty($draft) && !empty($draft['nama_file'])): ?>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:600;"><i class="bi bi-file-earmark-text"></i> Draft Akta — <?= esc($draft['status_review']) ?></div>
+                <?php if (!empty($draft['catatan'])): ?>
+                <div style="color:#666;margin-top:4px;">Catatan Staff: <?= esc($draft['catatan']) ?></div>
+                <?php endif; ?>
+                <div style="color:#999;font-size:11px;margin-top:2px;">Dikirim: <?= $draft['created_at'] ? date('d/m/Y H:i', strtotime($draft['created_at'])) : '-' ?></div>
+              </div>
+              <a href="javascript:void(0)" onclick="openDraftViewer('/notaris/lihat-draft/<?= $draft['id'] ?>')"
+                 style="background:var(--navy);color:#fff;padding:7px 14px;font-size:12px;font-weight:600;border-radius:3px;text-decoration:none;">
+                <i class="bi bi-eye"></i> Buka Draft
+              </a>
+            </div>
+          <?php else: ?>
+            <span style="color:#888;"><i class="bi bi-hourglass-split"></i> Staff belum mengirim draft akta.</span>
+          <?php endif; ?>
+        </div>
+      </div>
         <?php if(empty($dokumen)): ?>
         <div style="padding:20px;text-align:center;color:#999;">Belum ada dokumen.</div>
         <?php else: ?>
@@ -172,6 +193,7 @@ table.t tbody td{padding:10px 12px;border-bottom:1px solid #eee;vertical-align:m
               <td><?= esc($namaDoc[$dok['tipe_dokumen']]??$dok['tipe_dokumen']) ?></td>
               <td style="font-size:11px;color:#666;"><?= esc($dok['nama_file']) ?></td>
               <td><span class="<?= $sc ?>"><?= esc($dok['status_validasi']) ?></span></td>
+              <td><a href="javascript:void(0)" onclick="openViewer(<?= $i ?>)" style="font-size:11.5px;font-weight:600;color:var(--navy);"><i class="bi bi-eye"></i> Lihat</a></td>
             </tr>
             <?php endforeach; ?>
           </tbody>
@@ -196,5 +218,79 @@ table.t tbody td{padding:10px 12px;border-bottom:1px solid #eee;vertical-align:m
     </div>
   </div>
 </div>
+<!-- MODAL VIEWER DOKUMEN -->
+<!-- PANEL VIEWER DOKUMEN (slide dari kanan) -->
+<div id="viewer-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:999;" onclick="closeViewer()"></div>
+
+<div id="viewer-panel" style="position:fixed; top:0; right:-100%; width:92%; height:100%; background:#fff; z-index:1000; transition:right .25s ease; box-shadow:-6px 0 24px rgba(0,0,0,0.25); display:flex;">
+
+  <!-- Strip kontrol kiri -->
+  <div style="width:54px; border-right:1px solid #eee; display:flex; flex-direction:column; align-items:center; padding-top:14px; gap:6px; background:#fafafa;">
+    <button onclick="closeViewer()" title="Tutup"
+      style="background:none; border:none; color:#c0392b; font-size:20px; cursor:pointer; padding:6px;">&times;</button>
+    <button id="btn-prev" onclick="gantiDok(-1)" title="Dokumen sebelumnya"
+      style="background:none; border:none; color:var(--navy); font-size:20px; cursor:pointer; padding:6px;">&lsaquo;</button>
+    <button id="btn-next" onclick="gantiDok(1)" title="Dokumen berikutnya"
+      style="background:none; border:none; color:var(--navy); font-size:20px; cursor:pointer; padding:6px;">&rsaquo;</button>
+  </div>
+
+  <!-- Konten -->
+  <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
+    <div style="padding:12px 18px; border-bottom:1px solid #eee;">
+      <div style="font-size:11.5px; color:#666; margin-bottom:4px;">Jenis Dokumen :</div>
+      <div id="viewer-title" style="border:1px solid #ddd; border-radius:3px; padding:8px 12px; font-size:13px; font-weight:600; color:var(--navy);">—</div>
+    </div>
+    <iframe id="viewer-frame" src="" style="flex:1; width:100%; border:none; background:#525659;"></iframe>
+  </div>
+</div>
+
+<script>
+// Daftar dokumen untuk navigasi ◀ ▶
+const daftarDok = [
+<?php foreach ($dokumen as $dok): ?>
+  { url: '/notaris/lihat-dokumen/<?= $dok['id'] ?>', nama: '<?= esc($namaDoc[$dok['tipe_dokumen']] ?? $dok['tipe_dokumen'], 'js') ?>' },
+<?php endforeach; ?>
+];
+let dokIndex = -1;
+
+function tampilkanDok() {
+  const d = daftarDok[dokIndex];
+  document.getElementById('viewer-title').textContent = d.nama;
+  document.getElementById('viewer-frame').src = d.url;
+  // Sembunyikan panah kalau di ujung daftar
+  document.getElementById('btn-prev').style.visibility = dokIndex > 0 ? 'visible' : 'hidden';
+  document.getElementById('btn-next').style.visibility = dokIndex < daftarDok.length - 1 ? 'visible' : 'hidden';
+}
+
+function openViewer(index) {
+  dokIndex = index;
+  tampilkanDok();
+  document.getElementById('viewer-overlay').style.display = 'block';
+  document.getElementById('viewer-panel').style.right = '0';
+}
+
+function gantiDok(arah) {
+  const baru = dokIndex + arah;
+  if (baru < 0 || baru >= daftarDok.length) return;
+  dokIndex = baru;
+  tampilkanDok();
+}
+
+// Draft akta dibuka terpisah (tanpa navigasi antar dokumen)
+function openDraftViewer(url) {
+  document.getElementById('viewer-title').textContent = 'Draft Akta';
+  document.getElementById('viewer-frame').src = url;
+  document.getElementById('btn-prev').style.visibility = 'hidden';
+  document.getElementById('btn-next').style.visibility = 'hidden';
+  document.getElementById('viewer-overlay').style.display = 'block';
+  document.getElementById('viewer-panel').style.right = '0';
+}
+
+function closeViewer() {
+  document.getElementById('viewer-panel').style.right = '-100%';
+  document.getElementById('viewer-overlay').style.display = 'none';
+  document.getElementById('viewer-frame').src = '';
+}
+</script>
 </body>
 </html>

@@ -188,23 +188,30 @@ table.t tbody tr:hover{background:#f5f8ff;}
           <h6>Dokumen yang Diunggah</h6>
           <span style="font-size:11px;color:rgba(255,255,255,0.6);"><?= count($dokumen) ?> file</span>
         </div>
+        <?php
+        $namaDoc = [
+          'ktp_penjual'=>'Ktp Penjual','ktp_istri_penjual'=>'Ktp Istri Penjual',
+          'kk_penjual'=>'Kartu Keluarga Penjual (KK)','npwp_penjual'=>'Npwp Penjual',
+          'ktp_pembeli'=>'Ktp Pembeli','kk_pembeli'=>'Kartu Keluarga Pembeli (KK)',
+          'npwp_pembeli'=>'Npwp Pembeli','buku_nikah_penjual'=>'Buku Nikah Penjual',
+          'akta_lahir'=>'Akta Lahir','sppt_pbb'=>'SPPT/PBB',
+          'bukti_bayar_sppt'=>'Bukti Bayar SPPT/PBB','akta_kematian'=>'Akta Kematian',
+          'bukti_transaksi'=>'Bukti Transaksi','bukti_kepemilikan'=>'Sertipikat/AJB/C Desa Girik',
+          'surat_kuasa_waris'=>'Surat Kuasa Waris','foto_lokasi'=>'Foto Lokasi Tanah',
+          'dokumen_lainnya_1'=>'Dokumen Pendukung Lainnya','dokumen_lainnya_2'=>'Dokumen Pendukung Lainnya',
+          'dokumen_lainnya_3'=>'Dokumen Pendukung Lainnya','dokumen_lainnya_4'=>'Dokumen Pendukung Lainnya',
+          'dokumen_lainnya_5'=>'Dokumen Pendukung Lainnya',
+          ];
+        ?>
         <?php if(empty($dokumen)): ?>
         <div style="text-align:center;padding:28px;color:#999;">Belum ada dokumen yang diunggah.</div>
         <?php else: ?>
         <table class="t">
           <thead>
-            <tr><th>No</th><th>Jenis Dokumen</th><th>Nama File</th><th>Versi</th><th>Status</th><?php if($permohonan['status']!=='Selesai'): ?><th style="text-align:center;">Aksi Validasi</th><?php endif; ?></tr>
+            <tr><th>No</th><th>Jenis Dokumen</th><th>Nama File</th><th>Versi</th><th>Status</th><th>File</th><?php if($permohonan['status']!=='Selesai'): ?><th style="text-align:center;">Aksi Validasi</th><?php endif; ?></tr>
           </thead>
           <tbody>
             <?php
-            $namaDoc = [
-              'ktp'=>'KTP','kk'=>'Kartu Keluarga','npwp'=>'NPWP','buku_nikah'=>'Buku Nikah',
-              'akta_lahir'=>'Akta Lahir','ajb'=>'AJB','sppt_pbb'=>'SPPT/PBB',
-              'bukti_bayar_sppt'=>'Bukti Bayar SPPT/PBB','dasar_pengalihan'=>'Dasar Pengalihan Hak',
-              'akta_kematian'=>'Akta Kematian','bukti_transaksi'=>'Bukti Transaksi',
-              'bukti_kepemilikan'=>'Bukti Kepemilikan','surat_kuasa_waris'=>'Surat Kuasa Waris',
-              'foto_lokasi'=>'Foto Lokasi','dokumen_lainnya'=>'Dokumen Pendukung Lainnya',
-            ];
             foreach($dokumen as $i => $dok):
               $statusClass = match($dok['status_validasi']) {
                 'Valid'  => 'dv', 'Revisi' => 'drs', default => 'dm',
@@ -216,6 +223,7 @@ table.t tbody tr:hover{background:#f5f8ff;}
               <td style="font-size:11px;color:#666;"><?= esc($dok['nama_file']) ?></td>
               <td style="text-align:center;">v<?= $dok['versi'] ?></td>
               <td><span class="<?= $statusClass ?>"><?= esc($dok['status_validasi']) ?></span></td>
+              <td style="text-align:center;"><a href="javascript:void(0)" onclick="openViewer(<?= $i ?>)" style="font-size:11.5px;font-weight:600;color:var(--navy);"><i class="bi bi-eye"></i> Lihat</a></td>
               <?php if($permohonan['status']!=='Selesai'): ?>
               <td style="text-align:center;">
                 <div style="display:flex;gap:5px;justify-content:center;">
@@ -349,6 +357,64 @@ function previewPajak(){
 // Auto buka modal jika ada hash
 if(window.location.hash==='#ubah-status') document.getElementById('mo-status').classList.add('open');
 if(window.location.hash==='#hitung-pajak') document.getElementById('mo-pajak').classList.add('open');
+</script>
+
+<!-- PANEL VIEWER DOKUMEN (slide dari kanan) -->
+<div id="viewer-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:999;" onclick="closeViewer()"></div>
+
+<div id="viewer-panel" style="position:fixed; top:0; right:-100%; width:92%; height:100%; background:#fff; z-index:1000; transition:right .25s ease; box-shadow:-6px 0 24px rgba(0,0,0,0.25); display:flex;">
+  <div style="width:54px; border-right:1px solid #eee; display:flex; flex-direction:column; align-items:center; padding-top:14px; gap:6px; background:#fafafa;">
+    <button onclick="closeViewer()" title="Tutup"
+      style="background:none; border:none; color:#c0392b; font-size:20px; cursor:pointer; padding:6px;">&times;</button>
+    <button id="btn-prev" onclick="gantiDok(-1)" title="Dokumen sebelumnya"
+      style="background:none; border:none; color:var(--navy); font-size:20px; cursor:pointer; padding:6px;">&lsaquo;</button>
+    <button id="btn-next" onclick="gantiDok(1)" title="Dokumen berikutnya"
+      style="background:none; border:none; color:var(--navy); font-size:20px; cursor:pointer; padding:6px;">&rsaquo;</button>
+  </div>
+  <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
+    <div style="padding:12px 18px; border-bottom:1px solid #eee;">
+      <div style="font-size:11.5px; color:#666; margin-bottom:4px;">Jenis Dokumen :</div>
+      <div id="viewer-title" style="border:1px solid #ddd; border-radius:3px; padding:8px 12px; font-size:13px; font-weight:600; color:var(--navy);">—</div>
+    </div>
+    <iframe id="viewer-frame" src="" style="flex:1; width:100%; border:none; background:#525659;"></iframe>
+  </div>
+</div>
+
+<script>
+const daftarDok = [
+<?php foreach ($dokumen as $dok): ?>
+  { url: '/admin/lihat-dokumen/<?= $dok['id'] ?>', nama: '<?= esc($namaDoc[$dok['tipe_dokumen']] ?? $dok['tipe_dokumen'], 'js') ?>' },
+<?php endforeach; ?>
+];
+let dokIndex = -1;
+
+function tampilkanDok() {
+  const d = daftarDok[dokIndex];
+  document.getElementById('viewer-title').textContent = d.nama;
+  document.getElementById('viewer-frame').src = d.url;
+  document.getElementById('btn-prev').style.visibility = dokIndex > 0 ? 'visible' : 'hidden';
+  document.getElementById('btn-next').style.visibility = dokIndex < daftarDok.length - 1 ? 'visible' : 'hidden';
+}
+
+function openViewer(index) {
+  dokIndex = index;
+  tampilkanDok();
+  document.getElementById('viewer-overlay').style.display = 'block';
+  document.getElementById('viewer-panel').style.right = '0';
+}
+
+function gantiDok(arah) {
+  const baru = dokIndex + arah;
+  if (baru < 0 || baru >= daftarDok.length) return;
+  dokIndex = baru;
+  tampilkanDok();
+}
+
+function closeViewer() {
+  document.getElementById('viewer-panel').style.right = '-100%';
+  document.getElementById('viewer-overlay').style.display = 'none';
+  document.getElementById('viewer-frame').src = '';
+}
 </script>
 </body>
 </html>
