@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // AUTH (tidak perlu filter)
+$routes->get('/', static fn() => redirect()->to('/login'));
 $routes->get('/login',  'AuthController::index');
 $routes->post('/login', 'AuthController::loginProcess');
 $routes->get('/logout', 'AuthController::logout');
